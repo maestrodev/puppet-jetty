@@ -9,7 +9,7 @@ class jetty {
   }
   
   exec { "jetty_untar":
-    command => "tar xf /usr/local/src/jetty-distribution-$jetty_version.tar.gz && chown -R $jetty_owner:$jetty_group $jetty_home/jetty-distribution-$jetty_version",
+    command => "tar xf /usr/local/src/jetty-distribution-$jetty_version.tar.gz && chown -R $jetty_user:$jetty_group $jetty_home/jetty-distribution-$jetty_version",
     cwd     => "$jetty_home",
     creates => "$jetty_home/jetty-distribution-$jetty_version",
     path    => ["/bin",],
