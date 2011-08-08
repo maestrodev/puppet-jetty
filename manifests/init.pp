@@ -9,32 +9,32 @@ class jetty {
   }
   
   exec { "jetty_untar":
-    command => "tar xf /usr/local/src/jetty-distribution-$jetty_version.tar.gz && chown -R activemq:activemq /opt/jetty-distribution-$jetty_version",
-    cwd     => "/opt",
-    creates => "/opt/jetty-distribution-$jetty_version",
+    command => "tar xf /usr/local/src/jetty-distribution-$jetty_version.tar.gz && chown -R $jetty_owner:$jetty_group $jetty_home/jetty-distribution-$jetty_version",
+    cwd     => "$jetty_home",
+    creates => "$jetty_home/jetty-distribution-$jetty_version",
     path    => ["/bin",],
     require => Exec["jetty_download"],
 #also need to chown activemq:activemq this dir
   }
   
-  file { "/opt/jetty":
-    ensure  => "/opt/jetty-distribution-$jetty_version",
+  file { "$jetty_home/jetty":
+    ensure  => "$jetty_home/jetty-distribution-$jetty_version",
     require => Exec["jetty_untar"],
   }
 
   file { "/var/log/jetty":
-    ensure  => "/opt/jetty/logs",
-    require => File["/opt/jetty"],
+    ensure  => "$jetty_home/jetty/logs",
+    require => File["$jetty_home/jetty"],
   }
   
   file { "/etc/init.d/jetty":
-    ensure => "/opt/jetty-distribution-$jetty_version/bin/jetty.sh"
+    ensure => "$jetty_home/jetty-distribution-$jetty_version/bin/jetty.sh"
   }
 
   service {"jetty":
     ensure => running,
     hasrestart => true,
-    require    => [File["/etc/init.d/jetty"],Exec["jetty_untar"],Exec["jetty_download"],File["/opt/jetty"],File["/var/log/jetty"]],
+    require    => [File["/etc/init.d/jetty"],Exec["jetty_untar"],Exec["jetty_download"],File["$jetty_home/jetty"],File["/var/log/jetty"]],
   }
   
 }
