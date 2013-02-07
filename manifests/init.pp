@@ -1,7 +1,7 @@
 class jetty {
   include wget
   wget::fetch { "jetty_download":
-    source => "http://download.eclipse.org/jetty/$jetty_version/dist/jetty-distribution-$jetty_version.tar.gz",
+    source => "http://archive.eclipse.org/jetty/$jetty_version/dist/jetty-distribution-$jetty_version.tar.gz",
     destination => "/usr/local/src/jetty-distribution-$jetty_version.tar.gz",
   } ->
   #exec { "jetty_download":
