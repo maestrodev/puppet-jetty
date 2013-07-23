@@ -1,4 +1,7 @@
-require "#{File.join(File.dirname(__FILE__),'..','spec_helper')}"
+require 'spec_helper'
 
 describe 'jetty' do
+
+  it { should contain_service("jetty").with_ensure("running") }
+
 end

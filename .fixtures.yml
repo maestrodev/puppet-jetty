@@ -1,0 +1,3 @@
+fixtures:
+  symlinks:
+    jetty: "#{source_dir}"
