@@ -7,7 +7,7 @@ class jetty(
   include wget
 
   wget::fetch { "jetty_download":
-    source      => "http://eclipse.org/downloads/download.php?file=/jetty/${version}/dist/jetty-distribution-${version}.tar.gz&r=1",
+    source      => "http://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${version}/jetty-distribution-${version}.tar.gz",
     destination => "/usr/local/src/jetty-distribution-${version}.tar.gz",
   } ->
   exec { "jetty_untar":
