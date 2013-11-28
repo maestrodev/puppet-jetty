@@ -5,6 +5,14 @@ class jetty(
   $group = "jetty") {
 
   include wget
+  
+  user { "$user":
+    ensure => present,
+    managehome => true,
+  }
+  group {"$group":
+    ensure => present,
+  }
 
   wget::fetch { "jetty_download":
     source      => "http://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${version}/jetty-distribution-${version}.tar.gz",
