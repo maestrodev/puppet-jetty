@@ -50,7 +50,7 @@ class jetty (
   } ->
 
   file { "/etc/default/jetty":
-    source => template('jetty/default');
+    content => template('jetty/default');
   } ->
 
   file { "/etc/init.d/jetty":
