@@ -7,6 +7,14 @@ class jetty(
 ) {
 
   include wget
+  
+  user { "$user":
+    ensure => present,
+    managehome => true,
+  }
+  group {"$group":
+    ensure => present,
+  }
 
   if $manage_user {
 
