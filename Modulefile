@@ -8,4 +8,5 @@ source 'http://github.com/maestrodev/puppet-jetty'
 summary 'Jetty application server installation'
 description 'Install and configure Jetty appserver service'
 
-dependency 'maestrodev/wget',       '>=1.0.0'
+dependency 'maestrodev/wget', '>=1.0.0'
+dependency 'puppetlabs/stdlib', '>=3.2.0'

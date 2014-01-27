@@ -1,66 +1,58 @@
-class jetty (
+class jetty(
   $version,
-  $home        = "/opt",
-  $manage_user = false,
-  $user        = "jetty",
-  $group       = "jetty",
+  $home        = '/opt',
+  $manage_user = true,
+  $user        = 'jetty',
+  $group       = 'jetty',
 ) {
 
   include wget
 
   if $manage_user {
-    user { "$user":
-      ensure => present,
-      managehome => true,
-      system => true;
-    }
 
-    group { "$group":
-      ensure => present;
-    }
+    ensure_resource('user', $user, {
+      managehome => true,
+      system     => true,
+      gid        => $group,
+      before     => Exec['jetty_untar'],
+    })
+
+    ensure_resource('group', $group)
   }
 
   wget::fetch { "jetty_download":
     source      => "http://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${version}/jetty-distribution-${version}.tar.gz",
     destination => "/usr/local/src/jetty-distribution-${version}.tar.gz",
   } ->
-
   exec { "jetty_untar":
-    command => "tar xf /usr/local/src/jetty-distribution-${version}.tar.gz",
+    command => "tar xf /usr/local/src/jetty-distribution-${version}.tar.gz && chown -R ${user}:${group} ${home}/jetty-distribution-${version}",
     cwd     => $home,
     creates => "${home}/jetty-distribution-${version}",
     path    => ["/bin",],
-    require => [User[$user], Group[$group]]; 
-  } ->
-
-  file { "${home}/jetty-distribution-${version}":
-    ensure  => directory,
-    recurse => true,
-    backup  => false,
-    owner   => $user,
-    group   => $group;
+    notify  => Service["jetty"]
   } ->
   
   file { "${home}/jetty":
-    ensure  => "${home}/jetty-distribution-${version}";
+    ensure => "${home}/jetty-distribution-${version}",
   } ->
 
   file { "/var/log/jetty":
-    ensure  => "${home}/jetty/logs";
+    ensure => "${home}/jetty/logs",
   } ->
 
   file { "/etc/default/jetty":
-    content => template('jetty/default');
+    content => template('jetty/default'),
   } ->
 
   file { "/etc/init.d/jetty":
-    ensure  => "${home}/jetty-distribution-${version}/bin/jetty.sh";
+    ensure => "${home}/jetty-distribution-${version}/bin/jetty.sh",
   } ~>
 
   service { "jetty":
     enable     => true,
     ensure     => running,
     hasstatus  => false,
-    hasrestart => true;
+    hasrestart => true,
   }
+
 }
