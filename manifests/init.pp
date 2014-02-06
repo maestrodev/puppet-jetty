@@ -17,7 +17,9 @@ class jetty(
       before     => Exec['jetty_untar'],
     })
 
-    ensure_resource('group', $group)
+    ensure_resource('group', $group, { 
+      ensure => present
+    })
   }
 
   wget::fetch { "jetty_download":
